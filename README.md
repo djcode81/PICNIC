@@ -42,7 +42,7 @@ its dependencies already installed. We don't provide documentation for
 dependencies, but you may find the `PICNIC/Dockerfile` useful as a recipe.
 
 ```bash
-pip install -U git+git@github.com:ehauser-mind/PICNIC.git
+pip install -U git+git@github.com:bil-mind-nyspi/PICNIC.git
 cd PICNIC
 ./src/picnic/run.py my_input_deck.inp
 ```
