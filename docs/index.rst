@@ -10,7 +10,7 @@ you can run PICNIC in docker like so:
 
 .. code-block:: bash
 
-   git clone https://github.com/ehauser-mind/PICNIC.git
+   git clone https://github.com/bil-mind-nyspi/PICNIC.git
    ./PICNIC/scripts/run_picnic_in_docker \
    /path/to/input_deck.inp \
    /path/to/your/read_only_input_data \

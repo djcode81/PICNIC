@@ -19,7 +19,7 @@ Download the PICNIC code.
 
 .. code-block:: bash
 
-   git clone https://github.com/ehauser-mind/PICNIC.git
+   git clone https://github.com/bil-mind-nyspi/PICNIC.git
    cd PICNIC
 
 
