@@ -47,7 +47,7 @@ if [[ $V_LINE =~ .*\'(.*)\'.* ]]; then
 else
   PICNIC_VERSION="N/A"
 fi
-sed -i "s/__VERSION__/$PICNIC_VERSION/g" docs/index.rst
+sed -i "s|__VERSION__|$PICNIC_VERSION|g" docs/index.rst
 # Build docs
 make -C docs html
 
