@@ -89,7 +89,7 @@ publications from [our Lab](https://www.columbiapsychiatry.org/research-labs/bra
 modular nature enables extensive customization of preprocessing for a variety of
 brain PET studies, and its design may allow future extension to preprocessing of
 data from imaging modalities other than PET. The source code for PICNIC is
-available at the following link: https://github.com/ehauser-mind/PICNIC.git.
+available at the following link: https://github.com/bil-mind-nyspi/PICNIC.
 
 # Statement of need
 
