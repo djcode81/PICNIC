@@ -827,7 +827,7 @@ def create_mp4_from_image_list(image_list, output_filename, fps=2):
     for idx, im in enumerate(image_list):
         im.save('image_'+str(idx).zfill(4)+'.png')
 
-    os.system('ffmpeg -r '+str(fps)+' -f image2 -pattern_type glob -i "*.png" -vcodec libx264 -crf 20 -pix_fmt yuv420p '+output_filename)
+    os.system('ffmpeg -y -r '+str(fps)+' -f image2 -pattern_type glob -i "*.png" -vcodec libx264 -crf 20 -pix_fmt yuv420p '+output_filename)
 
 
 def advanced_colorbar_limits(image):

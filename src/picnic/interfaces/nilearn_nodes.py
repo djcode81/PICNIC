@@ -687,6 +687,7 @@ def _create_report(type_, in_files, additional_args=[]):
         # use ffmpeg to create an mp4 from the list of temporary images
         os.system(' '.join([
             'ffmpeg',
+            '-y',
             '-r ' + str(fps),
             '-f image2',
             '-pattern_type glob',
