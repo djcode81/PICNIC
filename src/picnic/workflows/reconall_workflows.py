@@ -13,6 +13,7 @@ from picnic.interfaces.string_template_nodes import _fill_report_template
 from picnic.interfaces.nibabel_nodes import (
     _reorient_image,
     _create_bilateral_atlas,
+    _create_atlas_sidecar,
     _binarize_images,
     _generate_wholebrain_mask,
     _generate_gray_matter_mask,
@@ -227,7 +228,7 @@ class ReconallWorkflow:
                 )
             )
             
-            # create a bilateral atlas based on that selected file and atlas 
+            # create a bilateral atlas based on that selected file and atlas
             #  and a freesurfer lookup table
             self.wf.add_node(
                 interface = Function(
@@ -252,6 +253,32 @@ class ReconallWorkflow:
                 ),
                 to_sink = [
                     'bilateral_out_file',
+                    'json_out_file'
+                ]
+            )
+
+            # create a json sidecar for the original (non-bilateral) atlas
+            # this provides label_lookup for TACs extraction
+            self.wf.add_node(
+                interface = Function(
+                    input_names = [
+                        'atlas',
+                        'lookup_table'
+                    ],
+                    output_names = [
+                        'json_out_file'
+                    ],
+                    function = _create_atlas_sidecar
+                ),
+                name = 'create_sidecar_' + atlas,
+                inflows = {
+                    'atlas' : '@select_' + atlas,
+                    'lookup_table' : LOOKUPTABLE_PATH
+                },
+                outflows = (
+                    'json_out_file',
+                ),
+                to_sink = [
                     'json_out_file'
                 ]
             )
