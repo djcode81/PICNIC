@@ -384,7 +384,10 @@ def load_cards_from_input_deck():
     window = sg.Window('Load Input Deck').Layout(layout)
     event, values = window.read()
     window.Close()
-    
+
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        return None
+
     if event == 'OK':
         inp = read_input_deck(values['-INP-'])
         return inp.cards
@@ -541,7 +544,7 @@ def show_parameters(card):
             )
         
         # cancel creating this card
-        elif event == 'Cancel':
+        elif event in (sg.WIN_CLOSED, 'Cancel'):
             window.Close()
             return (None, None)
         
@@ -622,6 +625,9 @@ def get_card_list(folder_path=None, extension='.json'):
         folder_path = get_path_to_jsons()
     for json_ in folder_path.glob(f"*{extension}"):
         card_name = os.path.basename(json_).replace(extension, '').replace('_', ' ')
+        # skip sink, it is a special card that does not have a module
+        if card_name == 'sink':
+            continue
         module_ = importlib.import_module(
             # '.'.join(('picnic', 'cards', card_name.replace(' ', '_')))
             '.'.join(('cards', card_name.replace(' ', '_')))
