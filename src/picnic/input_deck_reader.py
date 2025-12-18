@@ -8,6 +8,8 @@ import json
 import string
 import logging
 
+from six import reraise
+
 from picnic.cards import get_path_to_json
 
 
@@ -75,7 +77,14 @@ class InputDeck():
                 if line.lower().strip().startswith('*start'):
                     print('    Reader:    *start')
                     for line in f: # python iterator will continue its iteration until consumed
-                        line = string.Template(line.strip()).substitute(user_defined_parameters)
+                        try:
+                            line = string.Template(line.strip()).substitute(user_defined_parameters)
+                        except KeyError:
+                            print(f"ERROR while reading the input deck at {self.filename}: "
+                                  f"\n'{line.strip()}' is missing a parameter. "
+                                  f"Available parameters are: {user_defined_parameters.keys()}."
+                                  f"Did you forget to define a variable?")
+                            raise
                         if line.lower().startswith('*end'): # stop reading and exit method at *end
                             print('    Reader:    *end\n\n')
                             return
@@ -98,7 +107,14 @@ class InputDeck():
                                     
                                     # I personally don't like this, but I can't think of a better way to
                                     #   exit the iterator. Load the first card after *parameter
-                                    line = string.Template(line.strip()).substitute(user_defined_parameters)
+                                    try:
+                                        line = string.Template(line.strip()).substitute(user_defined_parameters)
+                                    except KeyError:
+                                        print(f"ERROR while reading the input deck at {self.filename}: "
+                                              f"\n'{line.strip()}' is missing a parameter. "
+                                              f"Available parameters are: {user_defined_parameters.keys()}."
+                                              f"Did you forget to define a variable?")
+                                        raise
                                     print('    Reader:    ' + line.lower())
                                     print(f"      {len(line.lower().split(','))} items")
                                     self.cards.append(Card(*[itm.strip() for itm in line.lower().split(',')]))
