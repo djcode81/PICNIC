@@ -75,7 +75,7 @@ class InputDeck():
                 if line.lower().strip().startswith('*start'):
                     print('    Reader:    *start')
                     for line in f: # python iterator will continue its iteration until consumed
-                        line = string.Template(line.strip()).safe_substitute(user_defined_parameters)
+                        line = string.Template(line.strip()).substitute(user_defined_parameters)
                         if line.lower().startswith('*end'): # stop reading and exit method at *end
                             print('    Reader:    *end\n\n')
                             return
@@ -98,7 +98,7 @@ class InputDeck():
                                     
                                     # I personally don't like this, but I can't think of a better way to
                                     #   exit the iterator. Load the first card after *parameter
-                                    line = string.Template(line.strip()).safe_substitute(user_defined_parameters)
+                                    line = string.Template(line.strip()).substitute(user_defined_parameters)
                                     print('    Reader:    ' + line.lower())
                                     print(f"      {len(line.lower().split(','))} items")
                                     self.cards.append(Card(*[itm.strip() for itm in line.lower().split(',')]))
