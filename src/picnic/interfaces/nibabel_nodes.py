@@ -245,6 +245,54 @@ def _create_bilateral_atlas(atlas, lookup_table, gz=True):
     
     return (bilateral_out_file, json_out_file)
 
+def _create_atlas_sidecar(atlas, lookup_table):
+    """
+    Create a JSON sidecar file for an atlas using a lookup table.
+    This provides label names for each ROI index in the atlas.
+
+    :Parameters:
+      -. `atlas` : file-like str, a 3d deterministic atlas
+      -. `lookup_table` : file-like str, a lookup table json file that
+        associates index to label
+    """
+
+    import os
+    import json
+    import numpy as np
+    import nibabel as nib
+    from picnic.interfaces.utility import nibabel_image_types
+
+    # get the basename from the atlas filename
+    dirname, filename = os.path.split(atlas)
+    for img_type in nibabel_image_types:
+        if filename.endswith(img_type):
+            basename = filename.replace(img_type, '')
+            break
+
+    # load the atlas to get unique ROI indices
+    atlas_img = nib.load(atlas)
+    atlas_fdata = atlas_img.get_fdata().astype(int)
+    unique_indices = np.unique(atlas_fdata)
+
+    # load the lookup table
+    with open(lookup_table) as f:
+        full_lookup = json.load(f)['label_lookup']
+
+    # create a filtered lookup containing only indices present in the atlas
+    atlas_lookup = {}
+    for roi_idx in unique_indices:
+        roi_idx_str = str(int(roi_idx))
+        if roi_idx_str in full_lookup:
+            atlas_lookup[roi_idx_str] = full_lookup[roi_idx_str]
+
+    # save out the json sidecar
+    out_json = {'label_lookup': atlas_lookup}
+    json_out_file = os.path.join(os.getcwd(), basename + '.json')
+    with open(json_out_file, 'w') as f:
+        json.dump(out_json, f, indent=4)
+
+    return json_out_file
+
 def _binarize_images(images, thr=None, uthr=None, gz=True):
     """
     force all non-zeros to 1. All images must be the same shape
